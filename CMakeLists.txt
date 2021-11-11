@@ -1,0 +1,25 @@
+cmake_minimum_required(VERSION 3.5)
+
+project(MPIapp LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(MISC_FILES "windowsRun.ps1")
+add_executable(MPIapp src/main.cpp src/mpihelper.h src/matrix.h ${MISC_FILES})
+
+#MPI LIB===================================
+OPTION(MsMpi_USE_86x_ARCH "Enable this if you compile for x86 (32 bit) system" OFF)
+if(MsMpi_USE_86x_ARCH)
+    set(MsMpi_SYSTEM_ARCH "x86")
+else()
+    set(MsMpi_SYSTEM_ARCH "x64")
+endif()
+unset(MsMpi_USE_86x_ARCH CACHE)
+set(MsMpi_ROOT_DIR "D:\\libs\\Microsoft SDKs\\MPI")
+set(MsMpi_DIR ${MsMpi_ROOT_DIR})
+set(MsMpi_INCLUDE_DIRS "${MsMpi_ROOT_DIR}\\Include" "${MsMpi_ROOT_DIR}\\Include\\${MsMpi_SYSTEM_ARCH}")
+set(MsMpi_LIBRARY_DIRS "${MsMpi_DIR}\\Lib\\${MsMpi_SYSTEM_ARCH}")
+set(MsMpi_LIBRARY msmpi)
+
+target_include_directories(MPIapp PRIVATE ${MsMpi_INCLUDE_DIRS} ${linalg_DIR})
+target_link_directories(MPIapp PRIVATE ${MsMpi_LIBRARY_DIRS})
+target_link_libraries(MPIapp ${MsMpi_LIBRARY})
